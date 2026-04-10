@@ -1,0 +1,535 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище elinoModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Журнал датчиков">
+          <Key>
+            <PropertyRef Name="ID датчиков" />
+          </Key>
+          <Property Name="ID датчиков" Type="int" Nullable="false" />
+          <Property Name="ID устройства" Type="int" Nullable="false" />
+          <Property Name="Значение" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Время записи" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Комнаты">
+          <Key>
+            <PropertyRef Name="ID комнаты" />
+          </Key>
+          <Property Name="ID комнаты" Type="int" Nullable="false" />
+          <Property Name="ID пользователя" Type="int" Nullable="false" />
+          <Property Name="Название" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Мнемосхем">
+          <Key>
+            <PropertyRef Name="ID мнемосхемы" />
+          </Key>
+          <Property Name="ID мнемосхемы" Type="int" Nullable="false" />
+          <Property Name="ID пользователя" Type="int" Nullable="false" />
+          <Property Name="Название" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6013: Первичный ключ в таблице или представлении "elino.dbo.Мнемосхемы" не определен, его не удалось вывести. Эта таблица или представление исключены. Чтобы использовать сущность, необходимо проверить схему, добавить правильные ключи и раскомментировать ее.
+        <EntityType Name="Мнемосхемы">
+          <Property Name="ID мнемосхемы" Type="int" />
+          <Property Name="ID пользователя" Type="int" />
+          <Property Name="Название" Type="nchar" MaxLength="10" />
+        </EntityType>-->
+        <EntityType Name="Пользователи">
+          <Key>
+            <PropertyRef Name="ID пользователя" />
+          </Key>
+          <Property Name="ID пользователя" Type="int" Nullable="false" />
+          <Property Name="Имя" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Почта" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Роль" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Правила автоматизации">
+          <Key>
+            <PropertyRef Name="ID автоматизации" />
+          </Key>
+          <Property Name="ID автоматизации" Type="int" Nullable="false" />
+          <Property Name="ID пользователя" Type="int" Nullable="false" />
+          <Property Name="Название" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Условие" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Действие" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Устройства">
+          <Key>
+            <PropertyRef Name="ID устройства" />
+          </Key>
+          <Property Name="ID устройства" Type="int" Nullable="false" />
+          <Property Name="ID комнаты" Type="int" Nullable="false" />
+          <Property Name="Тип" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Название" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Статус" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Текущее значение" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Журнал датчиков_Устройства1">
+          <End Role="Устройства" Type="Self.Устройства" Multiplicity="1" />
+          <End Role="Журнал датчиков" Type="Self.Журнал датчиков" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Устройства">
+              <PropertyRef Name="ID устройства" />
+            </Principal>
+            <Dependent Role="Журнал датчиков">
+              <PropertyRef Name="ID устройства" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Комнаты_Пользователи">
+          <End Role="Пользователи" Type="Self.Пользователи" Multiplicity="1" />
+          <End Role="Комнаты" Type="Self.Комнаты" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Пользователи">
+              <PropertyRef Name="ID пользователя" />
+            </Principal>
+            <Dependent Role="Комнаты">
+              <PropertyRef Name="ID пользователя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Мнемосхем_Пользователи">
+          <End Role="Пользователи" Type="Self.Пользователи" Multiplicity="1" />
+          <End Role="Мнемосхем" Type="Self.Мнемосхем" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Пользователи">
+              <PropertyRef Name="ID пользователя" />
+            </Principal>
+            <Dependent Role="Мнемосхем">
+              <PropertyRef Name="ID пользователя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Правила автоматизации_Пользователи">
+          <End Role="Пользователи" Type="Self.Пользователи" Multiplicity="1" />
+          <End Role="Правила автоматизации" Type="Self.Правила автоматизации" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Пользователи">
+              <PropertyRef Name="ID пользователя" />
+            </Principal>
+            <Dependent Role="Правила автоматизации">
+              <PropertyRef Name="ID пользователя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Устройства_Комнаты">
+          <End Role="Комнаты" Type="Self.Комнаты" Multiplicity="1" />
+          <End Role="Устройства" Type="Self.Устройства" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Комнаты">
+              <PropertyRef Name="ID комнаты" />
+            </Principal>
+            <Dependent Role="Устройства">
+              <PropertyRef Name="ID комнаты" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="Хранилище elinoModelContainer">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Журнал датчиков" EntityType="Self.Журнал датчиков" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Комнаты" EntityType="Self.Комнаты" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Мнемосхем" EntityType="Self.Мнемосхем" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Пользователи" EntityType="Self.Пользователи" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Правила автоматизации" EntityType="Self.Правила автоматизации" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Устройства" EntityType="Self.Устройства" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Журнал датчиков_Устройства1" Association="Self.FK_Журнал датчиков_Устройства1">
+            <End Role="Устройства" EntitySet="Устройства" />
+            <End Role="Журнал датчиков" EntitySet="Журнал датчиков" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Комнаты_Пользователи" Association="Self.FK_Комнаты_Пользователи">
+            <End Role="Пользователи" EntitySet="Пользователи" />
+            <End Role="Комнаты" EntitySet="Комнаты" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Мнемосхем_Пользователи" Association="Self.FK_Мнемосхем_Пользователи">
+            <End Role="Пользователи" EntitySet="Пользователи" />
+            <End Role="Мнемосхем" EntitySet="Мнемосхем" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Правила автоматизации_Пользователи" Association="Self.FK_Правила автоматизации_Пользователи">
+            <End Role="Пользователи" EntitySet="Пользователи" />
+            <End Role="Правила автоматизации" EntitySet="Правила автоматизации" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Устройства_Комнаты" Association="Self.FK_Устройства_Комнаты">
+            <End Role="Комнаты" EntitySet="Комнаты" />
+            <End Role="Устройства" EntitySet="Устройства" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="elinoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Журнал_датчиков">
+          <Key>
+            <PropertyRef Name="ID_датчиков" />
+          </Key>
+          <Property Name="ID_датчиков" Type="Int32" Nullable="false" />
+          <Property Name="ID_устройства" Type="Int32" Nullable="false" />
+          <Property Name="Значение" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Время_записи" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Устройства" Relationship="Self.FK_Журнал_датчиков_Устройства1" FromRole="Журнал_датчиков" ToRole="Устройства" />
+        </EntityType>
+        <EntityType Name="Комнаты">
+          <Key>
+            <PropertyRef Name="ID_комнаты" />
+          </Key>
+          <Property Name="ID_комнаты" Type="Int32" Nullable="false" />
+          <Property Name="ID_пользователя" Type="Int32" Nullable="false" />
+          <Property Name="Название" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Пользователи" Relationship="Self.FK_Комнаты_Пользователи" FromRole="Комнаты" ToRole="Пользователи" />
+          <NavigationProperty Name="Устройства" Relationship="Self.FK_Устройства_Комнаты" FromRole="Комнаты" ToRole="Устройства" />
+        </EntityType>
+        <EntityType Name="Мнемосхем">
+          <Key>
+            <PropertyRef Name="ID_мнемосхемы" />
+          </Key>
+          <Property Name="ID_мнемосхемы" Type="Int32" Nullable="false" />
+          <Property Name="ID_пользователя" Type="Int32" Nullable="false" />
+          <Property Name="Название" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Пользователи" Relationship="Self.FK_Мнемосхем_Пользователи" FromRole="Мнемосхем" ToRole="Пользователи" />
+        </EntityType>
+        <EntityType Name="Пользователи">
+          <Key>
+            <PropertyRef Name="ID_пользователя" />
+          </Key>
+          <Property Name="ID_пользователя" Type="Int32" Nullable="false" />
+          <Property Name="Имя" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Почта" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Роль" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Комнаты" Relationship="Self.FK_Комнаты_Пользователи" FromRole="Пользователи" ToRole="Комнаты" />
+          <NavigationProperty Name="Мнемосхем" Relationship="Self.FK_Мнемосхем_Пользователи" FromRole="Пользователи" ToRole="Мнемосхем" />
+          <NavigationProperty Name="Правила_автоматизации" Relationship="Self.FK_Правила_автоматизации_Пользователи" FromRole="Пользователи" ToRole="Правила_автоматизации" />
+        </EntityType>
+        <EntityType Name="Правила_автоматизации">
+          <Key>
+            <PropertyRef Name="ID_автоматизации" />
+          </Key>
+          <Property Name="ID_автоматизации" Type="Int32" Nullable="false" />
+          <Property Name="ID_пользователя" Type="Int32" Nullable="false" />
+          <Property Name="Название" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Условие" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Действие" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Пользователи" Relationship="Self.FK_Правила_автоматизации_Пользователи" FromRole="Правила_автоматизации" ToRole="Пользователи" />
+        </EntityType>
+        <EntityType Name="Устройства">
+          <Key>
+            <PropertyRef Name="ID_устройства" />
+          </Key>
+          <Property Name="ID_устройства" Type="Int32" Nullable="false" />
+          <Property Name="ID_комнаты" Type="Int32" Nullable="false" />
+          <Property Name="Тип" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Название" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Статус" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Текущее_значение" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Журнал_датчиков" Relationship="Self.FK_Журнал_датчиков_Устройства1" FromRole="Устройства" ToRole="Журнал_датчиков" />
+          <NavigationProperty Name="Комнаты" Relationship="Self.FK_Устройства_Комнаты" FromRole="Устройства" ToRole="Комнаты" />
+        </EntityType>
+        <Association Name="FK_Журнал_датчиков_Устройства1">
+          <End Role="Устройства" Type="Self.Устройства" Multiplicity="1" />
+          <End Role="Журнал_датчиков" Type="Self.Журнал_датчиков" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Устройства">
+              <PropertyRef Name="ID_устройства" />
+            </Principal>
+            <Dependent Role="Журнал_датчиков">
+              <PropertyRef Name="ID_устройства" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Комнаты_Пользователи">
+          <End Role="Пользователи" Type="Self.Пользователи" Multiplicity="1" />
+          <End Role="Комнаты" Type="Self.Комнаты" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Пользователи">
+              <PropertyRef Name="ID_пользователя" />
+            </Principal>
+            <Dependent Role="Комнаты">
+              <PropertyRef Name="ID_пользователя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Устройства_Комнаты">
+          <End Role="Комнаты" Type="Self.Комнаты" Multiplicity="1" />
+          <End Role="Устройства" Type="Self.Устройства" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Комнаты">
+              <PropertyRef Name="ID_комнаты" />
+            </Principal>
+            <Dependent Role="Устройства">
+              <PropertyRef Name="ID_комнаты" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Мнемосхем_Пользователи">
+          <End Role="Пользователи" Type="Self.Пользователи" Multiplicity="1" />
+          <End Role="Мнемосхем" Type="Self.Мнемосхем" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Пользователи">
+              <PropertyRef Name="ID_пользователя" />
+            </Principal>
+            <Dependent Role="Мнемосхем">
+              <PropertyRef Name="ID_пользователя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Правила_автоматизации_Пользователи">
+          <End Role="Пользователи" Type="Self.Пользователи" Multiplicity="1" />
+          <End Role="Правила_автоматизации" Type="Self.Правила_автоматизации" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Пользователи">
+              <PropertyRef Name="ID_пользователя" />
+            </Principal>
+            <Dependent Role="Правила_автоматизации">
+              <PropertyRef Name="ID_пользователя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="elinoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Журнал_датчиков" EntityType="Self.Журнал_датчиков" />
+          <EntitySet Name="Комнаты" EntityType="Self.Комнаты" />
+          <EntitySet Name="Мнемосхем" EntityType="Self.Мнемосхем" />
+          <EntitySet Name="Пользователи" EntityType="Self.Пользователи" />
+          <EntitySet Name="Правила_автоматизации" EntityType="Self.Правила_автоматизации" />
+          <EntitySet Name="Устройства" EntityType="Self.Устройства" />
+          <AssociationSet Name="FK_Журнал_датчиков_Устройства1" Association="Self.FK_Журнал_датчиков_Устройства1">
+            <End Role="Устройства" EntitySet="Устройства" />
+            <End Role="Журнал_датчиков" EntitySet="Журнал_датчиков" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Комнаты_Пользователи" Association="Self.FK_Комнаты_Пользователи">
+            <End Role="Пользователи" EntitySet="Пользователи" />
+            <End Role="Комнаты" EntitySet="Комнаты" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Устройства_Комнаты" Association="Self.FK_Устройства_Комнаты">
+            <End Role="Комнаты" EntitySet="Комнаты" />
+            <End Role="Устройства" EntitySet="Устройства" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Мнемосхем_Пользователи" Association="Self.FK_Мнемосхем_Пользователи">
+            <End Role="Пользователи" EntitySet="Пользователи" />
+            <End Role="Мнемосхем" EntitySet="Мнемосхем" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Правила_автоматизации_Пользователи" Association="Self.FK_Правила_автоматизации_Пользователи">
+            <End Role="Пользователи" EntitySet="Пользователи" />
+            <End Role="Правила_автоматизации" EntitySet="Правила_автоматизации" />
+          </AssociationSet>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(elinoModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(elinoModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+        </EntityContainer>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище elinoModelContainer" CdmEntityContainer="elinoEntities">
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="elinoModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Журнал_датчиков">
+            <EntityTypeMapping TypeName="elinoModel.Журнал_датчиков">
+              <MappingFragment StoreEntitySet="Журнал датчиков">
+                <ScalarProperty Name="ID_датчиков" ColumnName="ID датчиков" />
+                <ScalarProperty Name="ID_устройства" ColumnName="ID устройства" />
+                <ScalarProperty Name="Значение" ColumnName="Значение" />
+                <ScalarProperty Name="Время_записи" ColumnName="Время записи" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Комнаты">
+            <EntityTypeMapping TypeName="elinoModel.Комнаты">
+              <MappingFragment StoreEntitySet="Комнаты">
+                <ScalarProperty Name="ID_комнаты" ColumnName="ID комнаты" />
+                <ScalarProperty Name="ID_пользователя" ColumnName="ID пользователя" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Мнемосхем">
+            <EntityTypeMapping TypeName="elinoModel.Мнемосхем">
+              <MappingFragment StoreEntitySet="Мнемосхем">
+                <ScalarProperty Name="ID_мнемосхемы" ColumnName="ID мнемосхемы" />
+                <ScalarProperty Name="ID_пользователя" ColumnName="ID пользователя" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Пользователи">
+            <EntityTypeMapping TypeName="elinoModel.Пользователи">
+              <MappingFragment StoreEntitySet="Пользователи">
+                <ScalarProperty Name="ID_пользователя" ColumnName="ID пользователя" />
+                <ScalarProperty Name="Имя" ColumnName="Имя" />
+                <ScalarProperty Name="Почта" ColumnName="Почта" />
+                <ScalarProperty Name="Роль" ColumnName="Роль" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Правила_автоматизации">
+            <EntityTypeMapping TypeName="elinoModel.Правила_автоматизации">
+              <MappingFragment StoreEntitySet="Правила автоматизации">
+                <ScalarProperty Name="ID_автоматизации" ColumnName="ID автоматизации" />
+                <ScalarProperty Name="ID_пользователя" ColumnName="ID пользователя" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+                <ScalarProperty Name="Условие" ColumnName="Условие" />
+                <ScalarProperty Name="Действие" ColumnName="Действие" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Устройства">
+            <EntityTypeMapping TypeName="elinoModel.Устройства">
+              <MappingFragment StoreEntitySet="Устройства">
+                <ScalarProperty Name="ID_устройства" ColumnName="ID устройства" />
+                <ScalarProperty Name="ID_комнаты" ColumnName="ID комнаты" />
+                <ScalarProperty Name="Тип" ColumnName="Тип" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+                <ScalarProperty Name="Статус" ColumnName="Статус" />
+                <ScalarProperty Name="Текущее_значение" ColumnName="Текущее значение" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="Хранилище elinoModel.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="Хранилище elinoModel.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="Хранилище elinoModel.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="Хранилище elinoModel.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="elinoModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="Хранилище elinoModel.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="elinoModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="Хранилище elinoModel.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="Хранилище elinoModel.sp_upgraddiagrams" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
